@@ -4,5 +4,19 @@
 **/dist/
 **/data/
 *.db*
+
+# Configuración local y secretos
 .env*
-!*.example
+*.env
+*.env.*
+
+# Herramientas y metadatos locales del arnés de IA
+/docs/ai/
+/.agents/
+/.codex/
+/skills/
+/scripts/ai/
+/scripts/context/
+/AGENTS.md
+/artifacts/ai-runs/
+/tests/orchestration/
