@@ -1,48 +1,95 @@
-# Nexo — Portal de solicitudes
+# Nexo — Portal de solicitudes de servicio
 
-Solución a `Prueba_Tecnica_FullStack_DotNet_Candidato.pdf`: ASP.NET Core 8, React y SQLite. Diseño sobrio, sin temática navideña. No requiere Docker, servidor SQL ni proveedores externos.
+Nexo registra solicitudes de servicio, muestra su estado y las procesa en segundo plano. Es una prueba técnica Full Stack .NET centrada en persistencia, concurrencia, idempotencia y recuperación ante fallos.
 
-## Ejecutar
+## Funcionalidades
 
-Requisitos: SDK .NET 8 (8.0.427 o parche posterior de la misma línea), Node.js 24 y npm. La primera instalación requiere acceso a NuGet/npm o sus cachés locales.
+- Registro por referencia externa, cliente, código de servicio y descripción.
+- Consulta por estado, paginación y actualización del listado cada 2,5 segundos.
+- Reenvío seguro. La misma referencia con datos idénticos devuelve la solicitud existente. Si los datos cambian, la API devuelve HTTP 409.
+- Procesamiento en segundo plano con reintentos y recuperación tras interrupciones.
 
-Desde esta carpeta, en PowerShell:
+## Arquitectura
 
-```powershell
-dotnet restore tests/Portal.Tests/Portal.Tests.csproj
+| Componente | Tecnología | Responsabilidad |
+| --- | --- | --- |
+| Interfaz | React y Vite | Registro, seguimiento y filtros. ASP.NET Core sirve el build estático. |
+| API | ASP.NET Core 8 | Validación, registro y consulta de solicitudes. |
+| Worker | BackgroundService de .NET | Reclama solicitudes, ejecuta el proveedor simulado y guarda el resultado. |
+| Persistencia | SQLite | Conserva solicitudes, intentos y recibos. Se inicializa al arrancar. |
+
+El worker reclama cada solicitud en una transacción. La reserva caduca a los 30 segundos para permitir la recuperación y su token evita escrituras tardías. El simulador conserva un recibo por referencia para reconocer un efecto ya registrado si se interrumpe el procesamiento. Consulta las [decisiones técnicas](docs/decisions.md).
+
+## Ejecutar en local
+
+Instala el SDK .NET 8 indicado en [global.json](global.json). Para recompilar la interfaz, usa Node.js 24 y npm. La primera restauración requiere acceso a los registros de paquetes o a una caché con las dependencias.
+
+~~~powershell
+git clone https://github.com/jgome4/service-portal.git
+cd service-portal
+dotnet run --project src/Portal.Api --urls http://127.0.0.1:5080
+~~~
+
+Abre [el portal local](http://127.0.0.1:5080). El frontend compilado está incluido. La interfaz, la API y el worker se ejecutan en el mismo proceso. SQLite crea el archivo de datos en src/Portal.Api/data/portal.db.
+
+Para recompilar el frontend después de editarlo:
+
+~~~powershell
 Push-Location frontend
 npm ci
 npm run build
 Pop-Location
-dotnet run --project src/Portal.Api --urls http://127.0.0.1:5080
-```
+~~~
 
-Abrir http://127.0.0.1:5080. API, interfaz y worker se ejecutan en el mismo proceso y origen. SQLite se crea automáticamente en `src/Portal.Api/data/portal.db`; los datos sobreviven a reinicios. No borrar ese directorio para conservarlos.
-
-Para desarrollo, ejecutar el backend y, en otra terminal, `cd frontend; npm run dev`. Vite publica su URL local y redirige `/api` al backend en el puerto 5080.
+Para desarrollo con recarga automática, deja el backend en el puerto 5080 y ejecuta npm run dev en frontend desde otra terminal. Vite redirige /api al backend.
 
 ## Demostración
 
-Registrar una referencia `ORDEN-001` completa normalmente. Una referencia que comience exactamente con `RETRY-` falla dos veces y completa en el tercer intento. `FAIL-` falla tres veces y termina en Failed. El código de servicio es libre. Son convenciones explícitas del simulador, no reglas del negocio.
+| Referencia | Resultado esperado |
+| --- | --- |
+| ORDEN-001 | Completa en el primer intento. |
+| RETRY-001 | Falla dos veces y completa en el tercer intento. |
+| FAIL-001 | Agota tres intentos y termina en Failed. |
 
-Reenviar la misma referencia y los mismos datos devuelve la solicitud existente sin crear otra fila. Cambiar datos con esa referencia devuelve 409. Los errores no limpian el formulario para permitir corregir o reintentar. El listado consulta cada 2,5 segundos, filtra en servidor y pagina de 20 en 20.
+RETRY- y FAIL- activan escenarios del simulador. Los estados son Pending, Processing, Completed y Failed. Ante fallos transitorios, el worker espera 2 y 4 segundos antes de los siguientes intentos.
 
-```powershell
+## API REST
+
+| Método y ruta | Uso |
+| --- | --- |
+| POST /api/requests | Registra una solicitud. Devuelve 201 al crear, 200 al reenviar datos idénticos y 409 ante un conflicto de referencia. |
+| GET /api/requests | Lista solicitudes con los parámetros opcionales status, limit y offset. |
+| GET /api/requests/{id} | Consulta una solicitud por identificador. |
+| GET /api/health | Comprueba que la API responde. |
+
+~~~json
+{
+  "externalReference": "ORDEN-001",
+  "customerId": "CLIENTE-42",
+  "serviceCode": "VISITA",
+  "description": "Revisar instalación"
+}
+~~~
+
+Consulta el [contrato HTTP](docs/api.md) para ver validaciones y códigos de respuesta.
+
+## Pruebas
+
+~~~powershell
 dotnet test tests/Portal.Tests/Portal.Tests.csproj
-```
+~~~
 
-Si el entorno impide la comunicación local del testhost, las mismas pruebas se ejecutan sin VSTest:
+Si VSTest no puede iniciar su proceso de pruebas en tu entorno, ejecuta los mismos casos directamente con dotnet run --project tests/Portal.Tests/Portal.Tests.csproj -p:UseSharedCompilation=false. Con el portal activo y una base de datos de prueba, node tests/api-smoke.mjs comprueba la API, concurrencia, validación, reintentos y archivos estáticos. El script crea solicitudes de prueba. Consulta los [resultados y límites de validación](docs/validation.md).
 
-```powershell
-dotnet run --project tests/Portal.Tests/Portal.Tests.csproj -p:UseSharedCompilation=false
-```
+## Estructura y operación
 
-Con la aplicación en ejecución, `node tests/api-smoke.mjs` comprueba API, concurrencia, errores, reintentos y archivos estáticos. Este smoke test crea registros con referencias únicas en la BD seleccionada; usar una BD de prueba.
+- src/Portal.Api/ contiene la API, SQLite, el worker y la interfaz compilada en wwwroot/.
+- frontend/ contiene el código React.
+- tests/ contiene las pruebas automatizadas y la comprobación HTTP.
+- docs/ incluye [operación y despliegue](docs/operations.md), [decisiones técnicas](docs/decisions.md) y [revisión de código legado](docs/legacy-review.md).
 
-También se incluyen los archivos estáticos ya compilados; `./start.ps1` permite iniciar directamente sin recompilar React. Recompilar frontend después de modificar sus fuentes.
-
-Ver [contrato API](docs/api.md), [decisiones y límites](docs/decisions.md), [revisión de legado](docs/legacy-review.md) y [operación/Windows Service](docs/operations.md).
+La demostración se ejecuta en local con un proveedor simulado. Antes de desplegarla en una red compartida, incorpora autenticación, autorización y HTTPS. La documentación de operación cubre configuración, respaldo y adaptación a Windows Service.
 
 ## Uso de IA
 
-Se utilizó Codex para interpretar el anexo, implementar API, almacenamiento, worker, interfaz, pruebas y documentación. Se verificó mediante compilación, pruebas del almacenamiento y escenarios HTTP. Durante la validación se sustituyeron versiones de paquetes no disponibles por versiones existentes en la caché local y se añadió la inicialización explícita del motor nativo SQLite. Las salidas de IA no se consideran evidencia de pruebas; los resultados reales se registran en `docs/validation.md`. No se utilizaron credenciales ni llamadas a proveedores de IA adicionales.
+Se utilizó Codex para interpretar la prueba técnica e implementar el portal, sus pruebas y su documentación. Los resultados verificados y las comprobaciones pendientes están en [validación](docs/validation.md).
