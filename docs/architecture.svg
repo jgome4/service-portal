@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1515" viewBox="0 0 1120 1515" role="img" aria-labelledby="title desc">
+<title id="title">ServicePortal · arquitectura, frontend y datos</title>
+<desc id="desc">Tres vistas del portal: navegador React, API y worker en ASP.NET Core con SQLite; regiones de App y cliente HTTP; esquema de solicitudes y recibos vinculados por referencia externa.</desc>
+<defs><linearGradient id="base" x2="1" y2="1"><stop stop-color="#071120"/><stop offset="1" stop-color="#122440"/></linearGradient><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#67e8f9"/></marker></defs>
+<g font-family="Inter, Segoe UI, Arial, sans-serif">
+<rect x="0" y="0" width="1120" height="1515" rx="26" fill="url(#base)" stroke="none"/>
+<text x="56" y="43" font-size="14" fill="#67e8f9" font-weight="800" text-anchor="start">NEXO / SERVICEPORTAL</text>
+<text x="56" y="89" font-size="37" fill="#f8fafc" font-weight="750" text-anchor="start">Arquitectura del portal de solicitudes</text>
+<text x="56" y="116" font-size="16" fill="#b7c9e6" font-weight="500" text-anchor="start">Registro idempotente  ·  procesamiento en segundo plano  ·  persistencia local</text>
+<rect x="32" y="140" width="1056" height="408" rx="22" fill="#0d172a" stroke="#253453"/>
+<text x="56" y="174" font-size="13" fill="#67e8f9" font-weight="800" text-anchor="start">01</text>
+<text x="92" y="176" font-size="23" fill="#f8fafc" font-weight="750" text-anchor="start">Arquitectura general</text>
+<text x="56" y="199" font-size="14" fill="#aebed6" font-weight="500" text-anchor="start">La interfaz y la API comparten origen. El worker corre dentro del mismo host.</text>
+<rect x="280" y="222" width="507" height="286" rx="18" fill="#101f3a" stroke="#3b5e8d"/>
+<text x="302" y="244" font-size="12" fill="#93c5fd" font-weight="800" text-anchor="start">HOST · ASP.NET CORE 8</text>
+<path d="M243 303 H300" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><path d="M522 303 H810" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><path d="M522 432 H548" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><path d="M408 381 V365 H786 V351 H810" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><path d="M770 451 H915 V377" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="269" y="293" font-size="11" fill="#67e8f9" font-weight="700" text-anchor="middle">HTTP</text><text x="666" y="292" font-size="13" fill="#a5f3fc" font-weight="600" text-anchor="middle">Alta y consulta</text><text x="645" y="357" font-size="12" fill="#a5f3fc" font-weight="600" text-anchor="middle">Reclama y actualiza</text><text x="918" y="472" font-size="12" fill="#a5f3fc" font-weight="600" text-anchor="middle">Registra el efecto</text>
+<rect x="54" y="255" width="189" height="105" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="70" y="270" width="25" height="3" rx="2" fill="#67e8f9" stroke="none"/>
+<text x="70" y="290" font-size="11" fill="#67e8f9" font-weight="700" text-anchor="start">NAVEGADOR</text>
+<text x="70" y="314" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">Portal React</text>
+<text x="70" y="335" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">Registro y seguimiento</text>
+<rect x="300" y="255" width="222" height="105" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="316" y="270" width="25" height="3" rx="2" fill="#c4b5fd" stroke="none"/>
+<text x="316" y="290" font-size="11" fill="#c4b5fd" font-weight="700" text-anchor="start">ENDPOINTS</text>
+<text x="316" y="314" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">API REST</text>
+<text x="316" y="335" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">Valida y conserva unicidad</text>
+<rect x="300" y="381" width="222" height="107" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="316" y="396" width="25" height="3" rx="2" fill="#93c5fd" stroke="none"/>
+<text x="316" y="416" font-size="11" fill="#93c5fd" font-weight="700" text-anchor="start">BACKGROUND SERVICE</text>
+<text x="316" y="440" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">Worker .NET</text>
+<text x="316" y="461" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">Pendientes y reintentos</text>
+<rect x="548" y="381" width="222" height="107" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="564" y="396" width="25" height="3" rx="2" fill="#fcd34d" stroke="none"/>
+<text x="564" y="416" font-size="11" fill="#fcd34d" font-weight="700" text-anchor="start">INTEGRACIÓN LOCAL</text>
+<text x="564" y="440" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">Proveedor simulado</text>
+<text x="564" y="461" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">Éxito o fallo transitorio</text>
+<rect x="810" y="269" width="230" height="108" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="826" y="284" width="25" height="3" rx="2" fill="#6ee7b7" stroke="none"/>
+<text x="826" y="304" font-size="11" fill="#6ee7b7" font-weight="700" text-anchor="start">PERSISTENCIA</text>
+<text x="826" y="328" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">SQLite</text>
+<text x="826" y="349" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">Solicitudes y recibos</text>
+<text x="56" y="527" font-size="13" fill="#aebed6" font-weight="500" text-anchor="start">El simulador conserva un recibo por referencia para reconocer un efecto ya registrado.</text>
+<rect x="32" y="568" width="1056" height="452" rx="22" fill="#0d172a" stroke="#253453"/>
+<text x="56" y="602" font-size="13" fill="#67e8f9" font-weight="800" text-anchor="start">02</text>
+<text x="92" y="604" font-size="23" fill="#f8fafc" font-weight="750" text-anchor="start">Componentes del frontend</text>
+<text x="56" y="627" font-size="14" fill="#aebed6" font-weight="500" text-anchor="start">Las regiones de la pantalla comparten estado dentro de App.</text>
+<path d="M463 731 V747 H293 V772" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><path d="M655 731 V747 H823 V772" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><path d="M293 879 V900 H442 V916" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><path d="M823 879 V900 H651 V916" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><path d="M737 958 H794" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="370" y="630" width="380" height="101" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="386" y="645" width="25" height="3" rx="2" fill="#93c5fd" stroke="none"/>
+<text x="386" y="665" font-size="11" fill="#93c5fd" font-weight="700" text-anchor="start">COORDINACIÓN</text>
+<text x="386" y="689" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">App React</text>
+<text x="386" y="710" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">Estado del formulario, filtros y listado</text>
+<rect x="81" y="772" width="424" height="107" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="97" y="787" width="25" height="3" rx="2" fill="#67e8f9" stroke="none"/>
+<text x="97" y="807" font-size="11" fill="#67e8f9" font-weight="700" text-anchor="start">ALTA</text>
+<text x="97" y="831" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">Nueva solicitud</text>
+<text x="97" y="852" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">Formulario y envío de referencia, cliente y servicio</text>
+<rect x="615" y="772" width="424" height="107" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="631" y="787" width="25" height="3" rx="2" fill="#c4b5fd" stroke="none"/>
+<text x="631" y="807" font-size="11" fill="#c4b5fd" font-weight="700" text-anchor="start">LECTURA</text>
+<text x="631" y="831" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">Seguimiento de solicitudes</text>
+<text x="631" y="852" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">Tabla, filtros y paginación · consulta cada 2,5 s</text>
+<text x="362" y="893" font-size="11" fill="#67e8f9" font-weight="800" text-anchor="middle">POST</text><text x="738" y="893" font-size="11" fill="#67e8f9" font-weight="800" text-anchor="middle">GET</text>
+<rect x="329" y="916" width="408" height="91" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="345" y="931" width="25" height="3" rx="2" fill="#67e8f9" stroke="none"/>
+<text x="345" y="951" font-size="11" fill="#67e8f9" font-weight="700" text-anchor="start">CLIENTE HTTP</text>
+<text x="345" y="975" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">api()</text>
+<text x="345" y="996" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">Interpreta JSON y errores</text>
+<rect x="794" y="916" width="245" height="91" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="810" y="931" width="25" height="3" rx="2" fill="#6ee7b7" stroke="none"/>
+<text x="810" y="951" font-size="11" fill="#6ee7b7" font-weight="700" text-anchor="start">MISMO ORIGEN</text>
+<text x="810" y="975" font-size="19" fill="#f8fafc" font-weight="700" text-anchor="start">API del portal</text>
+<text x="810" y="996" font-size="13" fill="#cbd5e1" font-weight="500" text-anchor="start">/api/requests</text>
+<rect x="32" y="1040" width="1056" height="443" rx="22" fill="#0d172a" stroke="#253453"/>
+<text x="56" y="1074" font-size="13" fill="#67e8f9" font-weight="800" text-anchor="start">03</text>
+<text x="92" y="1076" font-size="23" fill="#f8fafc" font-weight="750" text-anchor="start">Modelo de datos SQLite</text>
+<text x="56" y="1099" font-size="14" fill="#aebed6" font-weight="500" text-anchor="start">Vínculo lógico por external_reference. El esquema no declara una clave foránea.</text>
+<rect x="56" y="1111" width="423" height="317" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="68" y="1123" width="399" height="32" rx="8" fill="#183052" stroke="none"/>
+<text x="79" y="1145" font-size="16" fill="#a5f3fc" font-weight="700" text-anchor="start">requests</text>
+<rect x="68" y="1160" width="399" height="20" rx="3" fill="#152440" stroke="none"/>
+<text x="79" y="1175" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">id</text>
+<text x="457" y="1175" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT · PK</text>
+
+<text x="79" y="1196" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">external_reference</text>
+<text x="457" y="1196" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT · UNIQUE</text>
+<rect x="68" y="1202" width="399" height="20" rx="3" fill="#152440" stroke="none"/>
+<text x="79" y="1217" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">customer_id</text>
+<text x="457" y="1217" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT</text>
+
+<text x="79" y="1238" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">service_code</text>
+<text x="457" y="1238" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT</text>
+<rect x="68" y="1244" width="399" height="20" rx="3" fill="#152440" stroke="none"/>
+<text x="79" y="1259" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">description</text>
+<text x="457" y="1259" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT</text>
+
+<text x="79" y="1280" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">status</text>
+<text x="457" y="1280" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT · CHECK</text>
+<rect x="68" y="1286" width="399" height="20" rx="3" fill="#152440" stroke="none"/>
+<text x="79" y="1301" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">attempts</text>
+<text x="457" y="1301" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">INTEGER</text>
+
+<text x="79" y="1322" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">created_at</text>
+<text x="457" y="1322" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">INTEGER</text>
+<rect x="68" y="1328" width="399" height="20" rx="3" fill="#152440" stroke="none"/>
+<text x="79" y="1343" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">next_attempt</text>
+<text x="457" y="1343" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">INTEGER</text>
+
+<text x="79" y="1364" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">lease_until</text>
+<text x="457" y="1364" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">INTEGER · NULL</text>
+<rect x="68" y="1370" width="399" height="20" rx="3" fill="#152440" stroke="none"/>
+<text x="79" y="1385" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">claim_token</text>
+<text x="457" y="1385" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT · NULL</text>
+
+<text x="79" y="1406" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">last_error</text>
+<text x="457" y="1406" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT · NULL</text>
+<rect x="641" y="1111" width="421" height="128" rx="16" fill="#111e37" stroke="#31415e"/>
+<rect x="653" y="1123" width="397" height="32" rx="8" fill="#183052" stroke="none"/>
+<text x="664" y="1145" font-size="16" fill="#a5f3fc" font-weight="700" text-anchor="start">provider_effects</text>
+<rect x="653" y="1160" width="397" height="20" rx="3" fill="#152440" stroke="none"/>
+<text x="664" y="1175" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">external_reference</text>
+<text x="1040" y="1175" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT · PK</text>
+
+<text x="664" y="1196" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">receipt</text>
+<text x="1040" y="1196" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">TEXT</text>
+<rect x="653" y="1202" width="397" height="20" rx="3" fill="#152440" stroke="none"/>
+<text x="664" y="1217" font-size="13" fill="#f1f5f9" font-weight="600" text-anchor="start">created_at</text>
+<text x="1040" y="1217" font-size="12" fill="#9cc7f9" font-weight="500" text-anchor="end">INTEGER</text>
+<path d="M479 1200 H560 V1175 H641" fill="none" stroke="#67e8f9" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="560" y="1160" font-size="13" fill="#a5f3fc" font-weight="700" text-anchor="middle">0..1 ↔ 0..1</text>
+<rect x="641" y="1256" width="421" height="151" rx="16" fill="#152440" stroke="#31415e"/>
+<text x="661" y="1286" font-size="17" fill="#f8fafc" font-weight="700" text-anchor="start">Reglas de persistencia</text>
+<text x="661" y="1313" font-size="14" fill="#cbd5e1" font-weight="500" text-anchor="start">• Un recibo por referencia externa.</text>
+<text x="661" y="1336" font-size="14" fill="#cbd5e1" font-weight="500" text-anchor="start">• Completed es terminal por trigger.</text>
+<text x="661" y="1359" font-size="14" fill="#cbd5e1" font-weight="500" text-anchor="start">• Índice de estado, próximo intento y reserva.</text>
+<text x="661" y="1382" font-size="14" fill="#cbd5e1" font-weight="500" text-anchor="start">• Tiempos en milisegundos Unix UTC.</text>
+<text x="56" y="1453" font-size="13" fill="#aebed6" font-weight="500" text-anchor="start">PK = clave primaria · UNIQUE = restricción única · NULL = admite nulo</text>
+</g></svg>
