@@ -1,5 +1,14 @@
 # Nexo — Portal de solicitudes de servicio
 
+[Arquitectura general](docs/architecture.md#arquitectura-general) · [Componentes del frontend](docs/architecture.md#componentes-del-frontend) · [Modelo de datos](docs/architecture.md#modelo-de-datos)
+
+<details>
+<summary>Ver lámina de arquitectura</summary>
+
+[![ServicePortal: arquitectura, frontend y SQLite](docs/architecture.svg)](docs/architecture.md)
+
+</details>
+
 Nexo registra solicitudes de servicio, muestra su estado y las procesa en segundo plano. Es una prueba técnica Full Stack .NET centrada en persistencia, concurrencia, idempotencia y recuperación ante fallos.
 
 ## Funcionalidades
