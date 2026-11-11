@@ -1,5 +1,9 @@
 # Arquitectura de ServicePortal
 
+[![Lámina de arquitectura, componentes del frontend y modelo de datos](architecture.svg)](architecture.svg)
+
+[Ver lámina a tamaño completo](architecture.svg)
+
 Tres vistas del sistema implementado. La arquitectura muestra dónde se ejecuta cada responsabilidad. El frontend muestra cómo se organiza la pantalla de seguimiento. El modelo de datos describe el esquema SQLite.
 
 - [Arquitectura general](#arquitectura-general)
@@ -8,7 +12,10 @@ Tres vistas del sistema implementado. La arquitectura muestra dónde se ejecuta 
 
 ## Arquitectura general
 
-~~~mermaid
+<details>
+<summary>Fuente Mermaid editable</summary>
+
+~~~text
 flowchart TB
     Browser["Navegador · Portal React · registro y seguimiento"]
     subgraph Host["PROCESO ASP.NET CORE 8"]
@@ -36,13 +43,18 @@ flowchart TB
     class DB data
 ~~~
 
+</details>
+
 ASP.NET Core sirve los archivos estáticos de React y aloja el worker. El navegador registra y consulta solicitudes por HTTP. El worker usa SQLite para recuperar trabajo pendiente o abandonado y el simulador registra un recibo por referencia.
 
 [Entrada del host](../src/Portal.Api/Program.cs) · [Worker](../src/Portal.Api/Processor.cs) · [Persistencia y simulador](../src/Portal.Api/Store.cs)
 
 ## Componentes del frontend
 
-~~~mermaid
+<details>
+<summary>Fuente Mermaid editable</summary>
+
+~~~text
 flowchart TB
     App["App React · Estado compartido y coordinación"]
     Form["Nueva solicitud · Formulario · validación del envío"]
@@ -68,13 +80,18 @@ flowchart TB
     class Api boundary
 ~~~
 
+</details>
+
 El formulario, la tabla y los filtros son regiones de `App` en la implementación actual. Una vez registrado el envío, `App` reinicia el formulario y refresca el listado. Al cambiar los filtros o desmontar la pantalla, cancela la consulta anterior.
 
 [Código del frontend](../frontend/src/main.jsx) · [Proxy de desarrollo](../frontend/vite.config.js)
 
 ## Modelo de datos
 
-~~~mermaid
+<details>
+<summary>Fuente Mermaid editable</summary>
+
+~~~text
 erDiagram
     REQUESTS |o..o| PROVIDER_EFFECTS : "external_reference (vínculo lógico)"
 
@@ -99,6 +116,8 @@ erDiagram
         INTEGER created_at
     }
 ~~~
+
+</details>
 
 | Elemento | Garantía |
 | --- | --- |
