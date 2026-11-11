@@ -1,3 +1,4 @@
+// Documentación técnica: Jorge Gomez.
 using Portal.Api;
 using Xunit;
 
@@ -5,6 +6,7 @@ namespace Portal.Tests;
 
 public sealed class StoreTests : IDisposable
 {
+    // Cada caso usa SQLite real en una ubicación aislada de las demás pruebas.
     private readonly string directory = Path.Combine(Path.GetTempPath(), "portal-tests-" + Guid.NewGuid());
     private readonly Store store;
     public StoreTests() { store = new Store(Path.Combine(directory, "test.db")); store.Initialize(); }
@@ -29,6 +31,7 @@ public sealed class StoreTests : IDisposable
     [Fact] public void CrashAfterProviderEffectRecoversWithoutDuplicateAndFencesStaleWorker()
     {
         var request = store.Create(Input()).Request;
+        // Omitir Finish reproduce una caída después del efecto y antes de confirmar el estado.
         var first = store.Take(1000)!; Assert.True(store.InvokeProvider(first, 1000));
         Assert.Null(store.Take(2000));
         var recovered = store.Take(31_001)!;

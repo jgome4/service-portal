@@ -1,3 +1,4 @@
+// Documentación técnica: Jorge Gomez.
 using System.Reflection;
 using Portal.Tests;
 using Xunit;

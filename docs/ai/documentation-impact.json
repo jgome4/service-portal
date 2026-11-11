@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "path": "frontend/src/main.jsx",
+      "sha256": "79db66d1746a62521287fc1dc27e31dfef311cff104073d3192c3113fe6575cd",
+      "reason": "Solo se agregan comentarios explicativos firmados; no cambian contratos, estados, pantallas, arquitectura ni operación.",
+      "reviewedDocumentation": [
+        "docs/api.md",
+        "docs/decisions.md",
+        "docs/operations.md",
+        "README.md"
+      ],
+      "decision": "no-impact"
+    },
+    {
+      "path": "src/Portal.Api/Domain.cs",
+      "sha256": "e72763a8e068e1e516e9d68409a1593592d9e9d0f2443427dead5efa4906da90",
+      "reason": "Solo se agregan comentarios explicativos firmados; no cambian contratos, estados, pantallas, arquitectura ni operación.",
+      "reviewedDocumentation": [
+        "docs/api.md",
+        "docs/decisions.md",
+        "docs/operations.md",
+        "README.md"
+      ],
+      "decision": "no-impact"
+    },
+    {
+      "path": "src/Portal.Api/Processor.cs",
+      "sha256": "7f85373b1eacf28418578d4c5dfd31b458c0c2369cbd8e6f0a6698b51644768e",
+      "reason": "Solo se agregan comentarios explicativos firmados; no cambian contratos, estados, pantallas, arquitectura ni operación.",
+      "reviewedDocumentation": [
+        "docs/api.md",
+        "docs/decisions.md",
+        "docs/operations.md",
+        "README.md"
+      ],
+      "decision": "no-impact"
+    },
+    {
+      "path": "src/Portal.Api/Program.cs",
+      "sha256": "635cc1d68362cb61c16d031fdd4faeb26d0d055672502ceadac2b195aadd639c",
+      "reason": "Solo se agregan comentarios explicativos firmados; no cambian contratos, estados, pantallas, arquitectura ni operación.",
+      "reviewedDocumentation": [
+        "docs/api.md",
+        "docs/decisions.md",
+        "docs/operations.md",
+        "README.md"
+      ],
+      "decision": "no-impact"
+    },
+    {
+      "path": "src/Portal.Api/Store.cs",
+      "sha256": "c36026904d8e56df83156b54c860a39e6dbd84ecf08fbdc40d0b54b3f082cddb",
+      "reason": "Solo se agregan comentarios explicativos firmados; no cambian contratos, estados, pantallas, arquitectura ni operación.",
+      "reviewedDocumentation": [
+        "docs/api.md",
+        "docs/decisions.md",
+        "docs/operations.md",
+        "README.md"
+      ],
+      "decision": "no-impact"
+    },
+    {
+      "path": "start.ps1",
+      "sha256": "09e04a9415c1208069069429cf010c702e0ada744ce9b392f20d5ce34a04f45e",
+      "reason": "Solo se agregan comentarios explicativos firmados; no cambian contratos, estados, pantallas, arquitectura ni operación.",
+      "reviewedDocumentation": [
+        "docs/api.md",
+        "docs/decisions.md",
+        "docs/operations.md",
+        "README.md"
+      ],
+      "decision": "no-impact"
+    },
+    {
+      "path": "tests/Portal.Tests/Program.cs",
+      "sha256": "c0e5d8833a8af3f44ea62aa9ebc00fbbd3b2e8b6e3b22919c3c73c8dbf3aa7e6",
+      "reason": "Solo se agregan comentarios explicativos firmados; no cambian contratos, estados, pantallas, arquitectura ni operación.",
+      "reviewedDocumentation": [
+        "docs/api.md",
+        "docs/decisions.md",
+        "docs/operations.md",
+        "README.md"
+      ],
+      "decision": "no-impact"
+    },
+    {
+      "path": "tests/Portal.Tests/StoreTests.cs",
+      "sha256": "b3c05f8138dca76ac1087818f6030f912b72f860ac8f91ca9b0104292d6e5990",
+      "reason": "Solo se agregan comentarios explicativos firmados; no cambian contratos, estados, pantallas, arquitectura ni operación.",
+      "reviewedDocumentation": [
+        "docs/api.md",
+        "docs/decisions.md",
+        "docs/operations.md",
+        "README.md"
+      ],
+      "decision": "no-impact"
+    },
+    {
+      "path": "tests/api-smoke.mjs",
+      "sha256": "e85a18378f47b7612886ed1c10798c9bce879ba279af725546b978547a28f0df",
+      "reason": "Solo se agregan comentarios explicativos firmados; no cambian contratos, estados, pantallas, arquitectura ni operación.",
+      "reviewedDocumentation": [
+        "docs/api.md",
+        "docs/decisions.md",
+        "docs/operations.md",
+        "README.md"
+      ],
+      "decision": "no-impact"
+    }
+  ]
+}

@@ -1,7 +1,10 @@
+// Documentación técnica: Jorge Gomez.
 using Microsoft.Data.Sqlite;
 
 namespace Portal.Api;
 
+/// <summary>Persiste solicitudes, coordina claims y conserva recibos del proveedor simulado.</summary>
+/// <remarks>Cada operación abre su conexión; las conexiones no se comparten entre workers.</remarks>
 public sealed class Store
 {
     private readonly string connectionString;
@@ -21,6 +24,8 @@ public sealed class Store
         foreach (var (key, value) in args) cmd.Parameters.AddWithValue(key, value ?? DBNull.Value);
         return cmd;
     }
+    /// <summary>Crea el esquema inicial y protege Completed como estado terminal en la BD.</summary>
+    /// <remarks>La creación idempotente no sustituye las migraciones de futuros cambios de esquema.</remarks>
     public void Initialize()
     {
         using var cn = Open();
@@ -44,6 +49,10 @@ public sealed class Store
     private static ServiceRequest Read(SqliteDataReader r) => new(r.GetString(0), r.GetString(1), r.GetString(2),
         r.GetString(3), r.GetString(4), r.GetString(5), r.GetInt32(6), r.GetInt64(7), r.IsDBNull(8) ? null : r.GetString(8));
     private const string Columns = "id, external_reference, customer_id, service_code, description, status, attempts, created_at, last_error";
+    /// <summary>Inserta una operación o devuelve la existente si la referencia y sus datos coinciden.</summary>
+    /// <returns>La solicitud persistida y un indicador de si se insertó una fila nueva.</returns>
+    /// <exception cref="ReferenceConflictException">La referencia existe con datos diferentes.</exception>
+    /// <remarks>Recibe datos validados y normalizados; UNIQUE resuelve los reenvíos concurrentes.</remarks>
     public (ServiceRequest Request, bool Created) Create(CreateRequest input)
     {
         using var cn = Open(); using var tx = cn.BeginTransaction();
@@ -67,6 +76,8 @@ public sealed class Store
         using var cn = Open(); using var cmd = Command(cn, $"SELECT {Columns} FROM requests WHERE id=$id", ("$id", id));
         using var reader = cmd.ExecuteReader(); return reader.Read() ? Read(reader) : null;
     }
+    /// <summary>Consulta por estado opcional con orden estable de fecha e identificador.</summary>
+    /// <remarks>La API valida la paginación antes de invocar este método.</remarks>
     public IReadOnlyList<ServiceRequest> List(string? status, int limit = 100, int offset = 0)
     {
         using var cn = Open(); using var cmd = Command(cn,
@@ -77,6 +88,8 @@ public sealed class Store
     }
     public Claim? Take(long now)
     {
+        // La transacción de escritura serializa selección y claim; now usa milisegundos Unix UTC.
+        // El lease de 30 segundos permite recuperar Processing tras una caída del worker.
         using var cn = Open(); using var tx = cn.BeginTransaction();
         using var select = Command(cn, $"""
             SELECT {Columns} FROM requests WHERE (status='Pending' AND next_attempt <= $now)
@@ -94,6 +107,8 @@ public sealed class Store
     }
     public bool Finish(Claim claim, bool success, long now)
     {
+        // El token impide que un worker rezagado sobrescriba el resultado de un nuevo claim.
+        // Un fallo reprograma con espera progresiva; desde el tercer intento termina en Failed.
         using var cn = Open(); using var cmd = Command(cn, """
             UPDATE requests SET status=$status, next_attempt=$next, last_error=$error, lease_until=NULL,claim_token=NULL
             WHERE id=$id AND status='Processing' AND claim_token=$token
@@ -106,6 +121,8 @@ public sealed class Store
     // El proveedor simulado conserva su efecto idempotente incluso si cae el worker antes de Finish.
     public bool InvokeProvider(Claim claim, long now)
     {
+        // Un proveedor remoto real también debe garantizar idempotencia: la tabla local no basta.
+        // FAIL- y RETRY- son convenciones del simulador, no reglas del negocio.
         using var cn = Open();
         using var existing = Command(cn, "SELECT COUNT(*) FROM provider_effects WHERE external_reference=$ref", ("$ref", claim.Request.ExternalReference));
         if ((long)existing.ExecuteScalar()! > 0) return true;
@@ -118,6 +135,7 @@ public sealed class Store
             """, ("$ref", reference), ("$receipt", Guid.NewGuid().ToString()), ("$now", now));
         insert.ExecuteNonQuery(); return true;
     }
+    /// <summary>Cuenta efectos persistidos para verificar la idempotencia del simulador.</summary>
     public long EffectCount()
     {
         using var cn = Open(); using var cmd = Command(cn, "SELECT COUNT(*) FROM provider_effects");

@@ -1,3 +1,5 @@
+# Documentación técnica: Jorge Gomez.
+# Reutiliza el frontend compilado; si cambian sus fuentes, ejecutar npm run build antes de iniciar.
 $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
 try {

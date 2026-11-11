@@ -1,8 +1,10 @@
+// Documentación técnica: Jorge Gomez.
 using Portal.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 16_384);
 builder.Services.AddProblemDetails();
+// ContentRoot evita que la ruta por defecto dependa del directorio de la consola o del servicio.
 var database = builder.Configuration["DatabasePath"] ?? Path.Combine(builder.Environment.ContentRootPath, "data", "portal.db");
 var store = new Store(database); store.Initialize();
 builder.Services.AddSingleton(store);
@@ -14,6 +16,7 @@ app.Use(async (context, next) => {
     context.Response.Headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'";
     await next();
 });
+// React compilado y la API comparten origen; el despliegue local no requiere CORS.
 app.UseDefaultFiles(); app.UseStaticFiles();
 app.MapGet("/api/health", () => Results.Ok(new { status = "ok" }));
 app.MapPost("/api/requests", (CreateRequest input, Store db) => {
@@ -23,6 +26,7 @@ app.MapPost("/api/requests", (CreateRequest input, Store db) => {
         var (request, created) = db.Create(Input.Normalize(input));
         return created ? Results.Created($"/api/requests/{request.Id}", request) : Results.Ok(request);
     } catch (ReferenceConflictException) {
+        // Reenviar datos idénticos es válido; reutilizar la referencia con otros datos es un conflicto.
         return Results.Problem(statusCode: 409, title: "Referencia ya utilizada", detail: "La referencia pertenece a una solicitud con datos diferentes.");
     }
 });

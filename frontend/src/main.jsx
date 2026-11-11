@@ -1,3 +1,4 @@
+// Documentación técnica: Jorge Gomez.
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
@@ -6,6 +7,7 @@ const labels = {Pending:'Pendiente',Processing:'En proceso',Completed:'Completad
 const empty = {externalReference:'',customerId:'',serviceCode:'',description:''};
 async function api(url, options) {
   const response = await fetch(url, options);
+  // Conserva un error comprensible aunque el servidor devuelva una respuesta sin JSON válido.
   const body = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(body.detail || Object.values(body.errors || {}).flat().join(' ') || body.title || 'No fue posible completar la operación.');
   return body;
@@ -24,6 +26,7 @@ function App() {
       } catch(e) { if (active) setLoadError(e.message); }
     };
     load(); const timer = setInterval(load,2500);
+    // Al cambiar filtro o página, cancela consultas anteriores y descarta sus resultados tardíos.
     return () => { active=false; controller.abort(); clearInterval(timer); };
   },[status,offset,refresh]);
   async function submit(event) {
@@ -31,6 +34,7 @@ function App() {
     try {
       const created = await api('/api/requests',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)});
       setMessage(`Solicitud ${created.externalReference} registrada. Estado: ${labels[created.status]}.`);
+      // Solo el envío confirmado limpia el formulario; ante errores se conserva para reintentar.
       setForm(empty); setStatus(''); setOffset(0); setRefresh(x=>x+1);
     } catch(e) { setError(e.message); } finally { setBusy(false); }
   }

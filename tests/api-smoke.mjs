@@ -1,9 +1,12 @@
+// Documentación técnica: Jorge Gomez.
+// Ejecutar contra una BD de prueba: este smoke crea registros reales y no los elimina.
 import assert from 'node:assert/strict';
 const base = process.env.PORTAL_URL || 'http://127.0.0.1:5080';
 const stamp = Date.now();
 const payload = (reference) => ({externalReference:reference,customerId:'SMOKE',serviceCode:'VISIT',description:'Prueba HTTP automatizada'});
 async function post(body) { return fetch(`${base}/api/requests`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}); }
 const ref = `SMOKE-${stamp}`;
+// Los reenvíos simultáneos deben compartir ID y producir una sola respuesta de creación.
 const concurrent = await Promise.all(Array.from({length:8},()=>post(payload(ref))));
 assert.equal(concurrent.filter(r=>r.status===201).length,1);
 assert.ok(concurrent.every(r=>[200,201].includes(r.status)));
