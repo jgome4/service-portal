@@ -93,3 +93,20 @@ La demostración se ejecuta en local con un proveedor simulado. Antes de despleg
 ## Uso de IA
 
 Se utilizó Codex para interpretar la prueba técnica e implementar el portal, sus pruebas y su documentación. Los resultados verificados y las comprobaciones pendientes están en [validación](docs/validation.md).
+
+### Arnés de desarrollo
+
+El arnés local organizó las instrucciones de trabajo y la revisión de los cambios.
+
+| Componente | Función |
+| --- | --- |
+| `AGENTS.md` | Define las reglas del agente principal, el alcance de los cambios y las comprobaciones antes de entregar. |
+| Skills | Proporcionan instrucciones reutilizables para tareas como documentar código, revisar cambios y preparar verificaciones. El agente carga las que corresponden al trabajo. |
+| Subagentes | El arnés define perfiles para inventario, implementación y revisión. Cuando se delega, cada perfil recibe una tarea delimitada y permisos acotados. El agente principal revisa e integra los resultados. |
+| Selección de modelos | El enrutamiento considera el tipo de tarea, la complejidad, el riesgo y la disponibilidad. La configuración contempla GLM para inventario y backend delimitado, DeepSeek para documentación, pruebas y planificación, Kimi para frontend y revisión de navegador, y GPT‑6.1 Sol para arquitectura e integración compleja. |
+
+Para esta entrega se utilizó Codex como agente principal. Los perfiles de la tabla describen la configuración del arnés. La entrega no registra despachos a subagentes externos ni llamadas adicionales a esos proveedores. El arnés y sus credenciales se gestionan localmente, fuera del repositorio público.
+
+### Verificación y ajustes
+
+Se comprobó el resultado mediante la compilación del backend y el frontend y la ejecución de diez pruebas del almacenamiento. Durante la validación se ajustaron las versiones de paquetes a las disponibles en la caché local y se añadió la inicialización explícita del motor nativo de SQLite. Consulta los resultados y las comprobaciones pendientes en [validación](docs/validation.md).
